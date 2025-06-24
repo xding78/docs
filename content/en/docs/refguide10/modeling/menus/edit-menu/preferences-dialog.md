@@ -94,6 +94,14 @@ This option controls the synchronization of managed dependencies. For more infor
 
 A directory where Gradle is located on the computer that you use to deploy the application. The correct directory is usually located automatically.
 
+#### Extra Arguments {#extra-arguments}
+
+{{% alert color="info" %}}
+This option is available for Studio Pro 10.23.0 and above.
+{{% /alert %}}
+
+This option can be used to add extra arguments to the Gradle process.
+
 #### Use Custom Repositories
 
 Enabling this option allows you to specify which repositories should be used by Gradle. For more information, see the [Custom Repositories](/refguide10/managed-dependencies/#custom-repos) section in *Managed Dependencies*.
@@ -245,7 +253,7 @@ Hardware and driver issues may cause performance problems when running Studio Pr
 
 This beta feature is available from Studio Pro 10.17. 
 
-This option allows you to change the user interface language you work in while using Studio Pro. At this time, German, English, Japanese, Chinese, and Korean are supported. You must restart Studio Pro in order to use this feature.
+This option allows you to change the user interface language you work in while using Studio Pro. At this time, English, Japanese, Chinese, Korean, and Brazilian Portuguese (from Studio Pro 10.23) are supported. You must restart Studio Pro in order to use this feature.
 
 ### Editor Tabs Closing Policy {#closing-policy}
 
@@ -315,6 +323,10 @@ Publishing data as a GraphQL service is available as of Studio Pro 10.14. When y
 
 ### Maia
 
+### Enable Maia Explain
+
+Maia Explain was introduced in Studio Pro 10.21.0. Enable this option to let Maia explain a microflow or a nanoflow in the logic editors for you. For more information on how to use this feature, see [Maia Explain](/refguide10/maia-explain/). It is enabled by default.
+
 #### Enable Maia for Domain Model
 
 Maia for Domain Model was introduced in Studio Pro 10.13.0. Enable this option to help you generate entities and associations for your domain models. For more information on how to use this feature, see [Maia for Domain Model](/refguide10/maia-for-domain-model/).
@@ -344,6 +356,10 @@ If Translation Generator is also enabled, you can use it in this editor as well.
 ### Toolbox
 
 Enable this setting to use the modernized toolbox. This requires restart of Studio Pro.
+
+### Workflow Editor
+
+Interrupting timer boundary event was released as a beta feature in Studio Pro 10.20.0. Enable this option to be able to use interrupting timer boundary events in the workflow editor. For more information, see [Boundary Events](/refguide10/workflow-boundary-events/).
 
 ## Read More
 
