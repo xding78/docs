@@ -33,6 +33,8 @@ The Agent Commons module offers the following features:
 
 * Drag and drop operations for calling both single-call and conversational agents from microflows and workflows.
 
+* Adding tools and knowledge bases to enhance the agent's capabilities
+
 * Prompt placeholders, allowing dynamic insertion of values based on user or context objects at runtime.
 
 * Logic to define and run tests individually or in bulk, with result comparisons.
@@ -41,18 +43,18 @@ The Agent Commons module offers the following features:
 
 * The ability to manage the active agent version used by the app logic in the app environment eliminates the need for redeployment.
 
-{{% alert color="info" %}} The current scope of the module focuses on LLM invocations using a variety of prompts, optionally enhanced with placeholders (variables). Agents can be further extended by integrating microflows with a single parameter as tools using the [Function Calling](/appstore/modules/genai/function-calling/) setup, and by connecting to knowledge bases provided through [Mendix Cloud GenAI Resources](/appstore/modules/genai/mx-cloud-genai/resource-packs/#knowledge-bases). {{% /alert %}}
-
 ### Dependencies {#dependencies}
 
-The Agent Commons module requires Mendix Studio Pro version [10.21.0](/releasenotes/studio-pro/10.21/#10210) or above.
+The Agent Commons module requires Mendix Studio Pro version 10.24.0 or above.
 
 In addition, install the following modules:
 
+* [Administration](https://marketplace.mendix.com/link/component/23513)
 * [Community Commons](https://marketplace.mendix.com/link/component/170)
-* [GenAI Commons](https://marketplace.mendix.com/link/component/239448)
-* [Mendix Cloud GenAI Connector](https://marketplace.mendix.com/link/component/239449)
 * [Conversational UI](https://marketplace.mendix.com/link/component/239450)
+* [GenAI Commons](https://marketplace.mendix.com/link/component/239448)
+* [MCP Client](https://marketplace.mendix.com/link/component/244893)
+* [Nanoflow Commons](https://marketplace.mendix.com/link/component/109515)
 
 ## Installation
 
@@ -98,7 +100,7 @@ To interact with LLMs using Agent Commons, you need at least one GenAI connector
 
 ### Defining the Agent {#define-agent}
 
-When the app is running, a user with the `AgentAdmin` role can set up agents, write prompts, link microflows as tools, and provide access to knowledge bases. Once an agent is associated with a deployed model, it can be tested in an isolated environment, separate from the rest of the app’s logic, to validate its behavior effectively.
+When the app is running, a user with the `AgentAdmin` role can set up agents, write prompts, link microflows or MCP servers as tools, and provide access to knowledge bases. Once an agent version is associated with a deployed model, it can be tested in an isolated environment, separate from the rest of the app’s logic, to effectively validate its behavior.
 
 Users can create two types of agents:
 
@@ -122,17 +124,35 @@ The `AgentAdmin` will see warnings on the Agent Version Details page if:
 
 * The attribute length is insufficient to hold the actual values when logic is executed in the running app.
 
-#### Adding Microflows as Tools
+#### Adding Tools
+
+To extend an agent's capabilities, you can provide an LLM with tools so that it becomes truly agentic. Mendix currently supports adding microflows or all exposed tools from an MCP (Model Context Protocol) server to an agent version.
+
+##### Adding Microflows as Tools
 
 To allow your agent to act dynamically and autonomously or to access specific data based on input it determines, microflows can be added as tools. When the agent is invoked, it uses the function calling pattern to execute the required microflows, using the input specified in the model’s response.
 
 For more technical details, see the [Function Calling](/appstore/modules/genai/function-calling/) documentation.
 
+##### Adding tools from MCP servers
+
+Besides microflow tools, tools exposed by MCP servers are also supported. To add MCP tools to an agent version, select an MCP server configuration from the [MCP client module](/appstore/modules/genai/mcp-modules/mcp-client/). You can then choose one of two import types: 
+
+* Server: imports the entire server, including all tools it provides.
+* Tools: allows you to import specific tools from the server.
+
+Once the agent is called, all tools currently available from the server are added to the request and are available to the model.
+
 #### Adding Knowledge Bases
 
-For supported knowledge bases registered in your app, you can connect them to agents to enable autonomous retrievals. To set this up, refer to the documentation of the connector provided by your chosen knowledge base provider and follow the instructions for establishing a connection from your app.
+For supported knowledge bases registered in your app, you can connect them to agents to enable autonomous retrievals. Refer to the documentation of the connector provided by your selected knowledge base provider. Follow the instructions to configure the knowledge bases in your app, so that they can be linked to your agents. Mendix provides the following platform-supported connectors that support knowledge base integrations with agents:
 
-To allow the agent to perform semantic searches, add the knowledge base to the agent definition and configure the retrieval parameters, such as metadata filters, the number of chunks to retrieve, and the threshold similarity.
+* [Mendix Cloud GenAI Connector](/appstore/modules/genai/mx-cloud-genai/MxGenAI-connector/#configuration)
+* [Amazon Bedrock Connector](/appstore/modules/aws/amazon-bedrock/#sync-models)
+* [OpenAI Connector](/appstore/modules/genai/reference-guide/external-connectors/openai/#azure-ai-search)
+* [PgVector Knowledge Base](/appstore/modules/genai/reference-guide/external-connectors/pgvector/#general-configuration)
+
+To allow an agent to perform semantic searches, add the knowledge base to the agent definition and configure the retrieval parameters, such as the number of chunks to retrieve, and the threshold similarity. Multiple knowledge bases can be added to the agent to pick from. Give each knowledge base a name and description (in human language) so that the model can decide which retrieves are necessary based on the input it gets.
 
 #### Testing and Refining the Agent
 
@@ -158,17 +178,17 @@ For most use cases, a `Call Agent` microflow activity can be used. You can find 
 
 ##### Call Agent with History {#call-agent-with-history}
 
-This action uses all defined settings, including the selected model, system prompt, tools, knowledge base, and model parameters to call the Agent using the specified `Request` and execute a `Chat Completions` operation. If a context entity is configured, the corresponding context object must be passed so that variables in the system prompt can be replaced. The operation returns a `Response` object containing the assistant’s final message, consistent with the chat completions operations from GenAI Commons.
+This action uses all defined settings, including the selected model, system prompt, tools, knowledge base, and model parameters to call the Agent using the specified `Request` and execute a `Chat Completions` operation. If a `Request` object is passed that already contains a system prompt, or a value for the parameters temperature, top P or max tokens, those values have priority and will not be overwritten by the agent configurations. If a context entity is configured, the corresponding context object must be passed so that variables in the system prompt can be replaced. The operation returns a `Response` object containing the assistant’s final message, consistent with the chat completions operations from GenAI Commons.
 
 To use it:
 
-1. Create a `Request` object using the [Create Request](/appstore/modules/genai/genai-for-mx/commons/#chat-create-request), [Default Preprocessing](/appstore/modules/genai/conversational-ui-module/conversational-ui/#chatcontext-operations), or the [Create Request with Chat History](/appstore/modules/genai/conversational-ui-module/conversational-ui/#request-operations) action. You can set optional attributes (such as temperature) directly on the request if you want to override those defined in the agent version. You can also [add additional knowledge bases or tools to the request](/appstore/modules/genai/genai-for-mx/commons/#add-function-to-request) that are not already defined with the agent version.
-2. Add at least one user message to the request using the [GenAI Commons operation](/appstore/modules/genai/genai-for-mx/commons/#chat-add-message-to-request). You can alternate between user and assistant messages if you want to send a whole conversation history to the model. If you used [Create Request with Chat History](/appstore/modules/genai/conversational-ui-module/conversational-ui/#request-operations) or [Default Preprocessing](/appstore/modules/genai/conversational-ui-module/conversational-ui/#chatcontext-operations) and your Chat Context contained messages, you can ignore this step.
+1. Create a `Request` object using the [Create Request](/appstore/modules/genai/genai-for-mx/commons/#chat-create-request), [Default Preprocessing](/appstore/modules/genai/genai-for-mx/conversational-ui/#chat-context-operations), or the [Create Request with Chat History](/appstore/modules/genai/genai-for-mx/conversational-ui/#request-operations) action. You can set optional attributes (such as temperature) directly on the request if you want to override those defined in the agent version. You can also [add additional knowledge bases or tools to the request](/appstore/modules/genai/genai-for-mx/commons/#add-function-to-request) that are not already defined with the agent version.
+2. Add at least one user message to the request using the [GenAI Commons operation](/appstore/modules/genai/genai-for-mx/commons/#chat-add-message-to-request). You can alternate between user and assistant messages if you want to send a whole conversation history to the model. If you used [Create Request with Chat History](/appstore/modules/genai/genai-for-mx/conversational-ui/#request-operations) or [Default Preprocessing](/appstore/modules/genai/genai-for-mx/conversational-ui/#chat-context-operations) and your Chat Context contained messages, you can ignore this step.
 3. Ensure the Agent object is in scope, for example, retrieve it from the database by name.
 4. Optional: For more specific use cases, a context object can be passed for variable replacement. This object needs to be of the entity that was selected while [defining the agent](#define-context-entity).
 5. Pass both the `Request`, Agent, and optionally the context object to the `Call Agent with History` activity.
 
-For a conversational agent, the chat context can be created based on the agent in one convenient operation. Use the `New Chat for Agent` operation from the **Toolbox** under the **Agents Kit** category. Retrieve the agent (for example, by name) and pass it with your custom context object to the operation. Note that this sets the system prompt for the chat context, making it applicable to the entire (future) conversation. Similar to other chat context operations, an action microflow needs to be selected for this microflow action. For more information, see the [Creating a Custom Action Microflow](/appstore/modules/genai/conversational-ui-module/conversational-ui/#action-microflow) section of Conversational UI.
+For a conversational agent, the chat context can be created based on the agent in one convenient operation. Use the `New Chat for Agent` operation from the **Toolbox** under the **Agents Kit** category. Retrieve the agent (for example, by name) and pass it with your custom context object to the operation. Note that this sets the system prompt for the chat context, making it applicable to the entire (future) conversation. Similar to other chat context operations, an action microflow needs to be selected for this microflow action. For more information, see the [Creating a Custom Action Microflow](/appstore/modules/genai/genai-for-mx/conversational-ui/#action-microflow) section of Conversational UI.
 
 {{% alert color="info" %}}
 Download the [Agent Builder Starter App](https://marketplace.mendix.com/link/component/240369) from the Marketplace for a detailed example of how to use the **Call Agent** activity in an action microflow of a chat interface.
@@ -176,7 +196,7 @@ Download the [Agent Builder Starter App](https://marketplace.mendix.com/link/com
 
 ##### Call Agent without History {#call-agent-without-history}
 
-This action is only supported by Single-call agents which have a user prompt defined as part of the agent version. It uses all defined settings, including the selected model, system prompt, user prompt, tools, knowledge base, and model parameters to call the agent by executing a `Chat Completions` operation. If any of such parameters should be overwritten or you want to pass a knowledge base or tool that is not already defined with the agent, you can do this by creating a request and adding these properties before passing it as `OptionalRequest` to the operation. If a context entity was configured, the corresponding context object must be passed so that variables in the system prompt can be replaced. The operation returns a `Response` object containing the assistant’s final message, similar to the chat completions operations from GenAI Commons.
+This action is only supported by Single-call agents which have a user prompt defined as part of the agent version. It uses all defined settings, including the selected model, system prompt, user prompt, tools, knowledge base, and model parameters to call the agent by executing a `Chat Completions` operation. If any of the parameters (system prompt, temperature, top P or max tokens) should be overwritten or you want to pass an additional knowledge base or tool that is not already defined with the agent, you can do this by creating a request and adding these properties before passing it as `OptionalRequest` to the operation. If a context entity was configured, the corresponding context object must be passed so that variables in the system prompt can be replaced. The operation returns a `Response` object containing the assistant’s final message, similar to the chat completions operations from GenAI Commons.
 
 To use it:
 
@@ -220,3 +240,13 @@ The **Documentation** pane displays the documentation for the currently selected
 2. Click the element for which you want to view the documentation.
 
     {{< figure src="/attachments/appstore/platform-supported-content/modules/technical-reference/doc-pane.png" >}}
+
+## Troubleshooting
+
+### Attribute or Reference Required Error Message After Upgrade 
+
+If you encounter an error stating that an attribute or a reference is required after an upgrade, first upgrade all modules by right-clicking the error, then upgrade Data Widgets.
+
+### Conflicted Lib Error After Module Import
+
+If you encounter an error caused by conflicting Java libraries, such as `java.lang.NoSuchMethodError: 'com.fasterxml.jackson.annotation.OptBoolean com.fasterxml.jackson.annotation.JsonProperty.isRequired()'`, try synchronizing all dependencies (**App** > **Synchronize dependencies**) and then restart your application.

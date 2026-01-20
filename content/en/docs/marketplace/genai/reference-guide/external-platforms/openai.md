@@ -13,29 +13,7 @@ aliases:
 
 The [OpenAI Connector](https://marketplace.mendix.com/link/component/220472) allows you to integrate generative AI into your Mendix app. It is compatible with [OpenAI's platform](https://platform.openai.com/) as well as [Azure's OpenAI service](https://oai.azure.com/). 
 
-The current scope covers text generation use cases based on the [OpenAI Chat Completions API](https://platform.openai.com/docs/api-reference/chat), image generation use cases based on the [Image Generations API](https://platform.openai.com/docs/api-reference/images), and embedding use cases based on the [Embeddings API](https://platform.openai.com/docs/api-reference/embeddings).
-
-Mendix provides dual-platform support for both OpenAI and Azure OpenAI.
-
-### Typical Use Cases {#use-cases}
-
-The OpenAI Connector is commonly used for text generation, image generation, and embeddings. These use cases are described in more detail below.
-
-#### Text Generation {#use-cases-text}
-
-* Develop interactive AI chatbots and virtual assistants that can carry out conversations in a natural and engaging manner. 
-* Use OpenAI’s large language models (LLMs) for text comprehension and analysis use cases such as summarization, synthesis, and answering questions about large amounts of text.
-* Fine-tune the OpenAI models on a specific task or domain by training them on custom data to improve their performance. 
-* Integrate more easily with OpenAI’s platform. By providing text generation models, this allows you to build applications with the following features:
-    * Draft documents 
-    * Write computer code 
-    * Answer questions about a knowledge base 
-    * Analyze texts
-    * Give software a natural language interface 
-    * Tutor in a range of subjects 
-    * Translate languages 
-    * Simulate characters for games
-    * Image to text
+### Features {#features}
 
 OpenAI provides market-leading LLM capabilities with GPT-4:
 
@@ -43,34 +21,15 @@ OpenAI provides market-leading LLM capabilities with GPT-4:
 * Creativity – Generate, edit, and iterate with end-users on creative and technical writing tasks, such as composing songs, writing screenplays, or learning an end-user’s writing style.
 * Longer context – GPT-4 can handle over 25,000 words of text, allowing for use cases like long-form content creation, extended conversations, and document search and analysis. 
 
-#### Image Generation {#use-cases-images}
-
-Generate one or more completely new, original images and art from a text description. Powered by the OpenAI DALL-E models, the connector enables developers to generate these images by combining concepts, attributes, and styles.
-
-#### Embeddings {#use-cases-embeddings}
-
-Convert strings into vector embeddings for various purposes based on the relatedness of texts.
-
-Embeddings are commonly used for the following:
-
-* Search 
-* Clustering 
-* Recommendations 
-* Anomaly detection 
-* Diversity measurement 
-* Classification 
-
-Combine embeddings with text generation capabilities and leverage specific sources of information to create a smart chat functionality tailored to your own knowledge base.
-
-{{% alert color="info" %}}
-For more information on how to set up a vector database, see [Retrieval Augmented Generation (RAG)](/appstore/modules/genai/rag/). Also, check out the [GenAI Showcase App](https://marketplace.mendix.com/link/component/220475) from the Marketplace for an example implementation.
-{{% /alert %}}
-
-### Features {#features}
-
 Mendix provides dual-platform support for both [OpenAI](https://platform.openai.com/) and [Azure OpenAI](https://oai.azure.com/). 
 
-With the current version, Mendix supports the Chat Completions API for [text generation](https://platform.openai.com/docs/guides/text-generation), the Image Generations API for [images](https://platform.openai.com/docs/guides/images), and the Embeddings API for [vector embeddings](https://platform.openai.com/docs/guides/embeddings/what-are-embeddings). 
+With the current version, Mendix supports the Chat Completions API for [text generation](https://platform.openai.com/docs/guides/text-generation), the Image Generations API for [images](https://platform.openai.com/docs/guides/images), the Embeddings API for [vector embeddings](https://platform.openai.com/docs/guides/embeddings/what-are-embeddings), and indexes via [Azure AI Search](https://learn.microsoft.com/en-us/azure/search/) for knowledge base retrieval.
+
+Typical use cases for generative AI are described in the [Typical LLM Use Cases](/appstore/modules/genai/get-started/#llm-use-cases).
+
+#### Knowledge Base
+
+By integrating Azure AI Search, the OpenAI Connector enables knowledge base retrieval from Azure data sources. For Retrieval Augmented Generation (RAG) scenarios, chat completions with (Azure) OpenAI can also be combined with knowledge bases by other provider such as Mendix Cloud.
 
 ### Prerequisites {#prerequisites}
 
@@ -78,7 +37,7 @@ To use this connector, you need to either sign up for an [OpenAI account](https:
 
 ### Dependencies {#dependencies}
 
-* Mendix Studio Pro version [9.24.2](/releasenotes/studio-pro/9.24/#9242) or higher
+* Mendix Studio Pro version 10.24.0 or above
 * [GenAI Commons module](/appstore/modules/genai/commons/)
 * [Encryption module](/appstore/modules/encryption/)
 * [Community Commons module](/appstore/modules/community-commons-function-library/)
@@ -143,6 +102,21 @@ The following inputs are required for the Azure OpenAI configuration:
 4. Make sure the right Azure OpenAI resource is selected.
 5. You can now view ({{% icon name="view" %}}) and copy ({{% icon name="copy" %}}) the value of the **key1** or **key2** field as your API key while setting up the configuration. Note that these keys might not be visible for everyone in the Azure OpenAI Portal, depending on your organization's security settings. 
 
+##### Adding Azure AI Search Resources {#azure-ai-search}  
+
+| Parameter      | Value                                                        |
+| -------------- | ------------------------------------------------------------ |
+| Display name | This is the name identifier of a Azure AI Search Resource (for example, *MySearchResource*). |
+| Endpoint URL | This is the API endpoint (for example, `https://your-resource-name.search.windows.net`).<br />For details on how to obtain `your-resource-name`, see [Azure AI Search service in the Azure portal](https://learn.microsoft.com/en-us/azure/search/search-create-service-portal). |
+| API version | This is the version of the REST API. |
+| API key | This is the access token to authorize your API call. |
+
+After saving, the indexes in this resource will be automatically synced and displayed in the configuration page. They will all be separate indexes that can be added to the request when using Chat completions.
+
+{{% alert color="warning" %}}
+Currently, the only supported authorization method for Azure AI Search resources is the API key.
+{{% /alert %}}
+
 #### Configuring the OpenAI Deployed Models
 
 A [Deployed Model](/appstore/modules/genai/genai-for-mx/commons/#deployed-model) represents a GenAI model instance that can be used by the app to generate text, embeddings, or images. For every model you want to invoke from your app, you need to create a `OpenAIDeployedModel` record, a specialization of `DeployedModel`. In addition to the model display name and a technical name/identifier, an OpenAI deployed model contains a reference to the additional connection details as configured in the previous step. For OpenAI, a set of common models will be prepopulated automatically upon saving the configuration. If you want to use additional models that are made available by OpenAI you need to configure additional OpenAI deployed models in your Mendix app. For Azure OpenAI no deployed models are created by default. The technical model names depend on the deployment names that were chosen while deploying the models in the [Azure Portal](https://oai.azure.com/resource/deployments). Therefore in this case you always need to configure the deployed models manually in your Mendix app.
@@ -191,7 +165,7 @@ OpenAI does not call the function. The model returns a tool called JSON structur
 
 This is all part of the implementation that is executed by the GenAI Commons chat completions operations mentioned before. As a developer, you have to make the system aware of your functions and what these do by registering the function(s) to the request. This is done using the GenAI Commons operation [Tools: Add Function to Request](/appstore/modules/genai/genai-for-mx/commons/#add-function-to-request) once per function before passing the request to the chat completions operation.
 
-Currently, the connector supports the calling of Function microflows that take a single input parameter of type string and optionally a Request and/or Tool object or no input parameter at all and return a string.
+Function microflows can have none, a single, or multiple primitive input parameters such as Boolean, Datetime, Decimal, Enumeration, Integer or String. Additionally, they may accept the [Request](/appstore/modules/genai/genai-for-mx/commons/#request) or [Tool](/appstore/modules/genai/genai-for-mx/commons/#tool) objects as inputs. The function microflow must return a String value.
 
 {{% alert color="warning" %}}
 Function calling is a very powerful capability and should be used with caution. Function microflows run in the context of the current user, without enforcing entity access. You can use `$currentUser` in XPath queries to ensure that you retrieve and return only information that the end-user is allowed to view; otherwise, confidential information may become visible to the current end-user in the assistant's response.
@@ -200,6 +174,16 @@ Mendix also strongly advises that you build user confirmation logic into functio
 {{% /alert %}}
 
 For more information, see [Function Calling](/appstore/modules/genai/function-calling/).
+
+#### Index {#chatcompletions-index}
+
+Adding Azure indexes to a call enables LLMs to retrieve information when a related topics are mentioned. By including these indexes in the request object along with a name and description, enables the model to intelligently decide when to let the Mendix app call one or more predefined indexes. This allows the assistant to include the additional information in its response.
+
+OpenAI does not directly connect to the Azure AI Search resource. The model returns a tool called JSON structure that is used to build the input of the retrievals so that they can be executed as part of the chat completions operation. The OpenAI connector takes care of handling the tool call response as well as executing the function microflows until the API returns the assistant's final response.
+
+This functionality is part of the implementation executed by the GenAI Commons Chat Completions operations mentioned earlier. As a developer, you need to make the system aware of your indexes and their purpose by registering them with the request. This is done using the GenAI Commons operation [Tools: Add Knowledge Base](/appstore/modules/genai/genai-for-mx/commons/#add-knowledge-base-to-request), which must be called once per index before passing the request to the Chat Completions operation.
+
+Note that the retrieval process is independent of the model provider and can be used with any model that supports function calling, as it relies on the generalized `GenAICommons.DeyploedKnowledgeBase`entity.
 
 #### Vision {#chatcompletions-vision}
 
@@ -305,6 +289,10 @@ All [tool choice types](/appstore/modules/genai/genai-for-mx/commons/#enum-toolc
 | none                   | none    |
 | tool                   | tool    |
 
+### Knowledge Base Retrieval
+
+When adding a [KnowledgeBaseRetrieval](/appstore/modules/genai/genai-for-mx/commons/#add-knowledge-base-to-request) object to your request, there are some optional parameters. Currently, only the MaxNumberOfResults parameter can be added to the search call and the others (`MinimumSimilarity` and `MetadataCollection`) are not compatible with the OpenAI Connector.
+
 ## GenAI showcase Application {#showcase-application}
 
 For more inspiration or guidance on how to use those microflows in your logic, Mendix recommends downloading the [GenAI Showcase App](https://marketplace.mendix.com/link/component/220475), which demonstrates a variety of example use cases.
@@ -342,6 +330,14 @@ Azure OpenAI does not support the use of JSON mode and function calling in combi
 ### Chat Completions with Vision Response is Cut Off (Azure OpenAI)
 
 When you use Azure OpenAI, it is recommended to set the optional `MaxTokens` input parameter; otherwise, the response may be cut off. For more details, see the [Azure OpenAI Documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource#call-the-chat-completion-apis).
+
+### Attribute or Reference Required Error Message After Upgrade 
+
+If you encounter an error stating that an attribute or a reference is required after an upgrade, first upgrade all modules by right-clicking the error, then upgrade Data Widgets. 
+
+### Conflicted Lib Error After Module Import
+
+If you encounter an error caused by conflicting Java libraries, such as `java.lang.NoSuchMethodError: 'com.fasterxml.jackson.annotation.OptBoolean com.fasterxml.jackson.annotation.JsonProperty.isRequired()'`, try synchronizing all dependencies (**App** > **Synchronize dependencies**) and then restart your application.
 
 ## Read More {#read-more}
 

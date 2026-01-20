@@ -106,21 +106,33 @@ You can specify which repositories to use for Gradle. The content of this field 
 
 ## Maia Tab
 
+### Generative AI
+
+The **Generative AI** section contains the following settings:
+
+* **Enable Start with Maia** – When enabled, you can use the **Start with Maia** starting point in Studio Pro to help you create an app. For more information on how to use this feature, see [Start with Maia](/refguide/start-with-maia/). It is enabled by default.
+* **Enable Maia Explain** – When enabled, you can use it to explain a microflow or a nanoflow in the logic editors. For more information on how to use this feature, see [Maia Explain](/refguide/maia-explain/). It is enabled by default.
+* **Enable Maia for Domain Model** – when enabled, you can use it to generate a new domain model or to explain and improve an existing one. For more information on how to use this feature, see [Maia for Domain Model](/refguide/maia-for-domain-model/). It is enabled by default.
+* **Enable Maia for OQL**– when enabled, you can use it to generate and manage OQL (Object Query Language) queries through an intuitive interface. For more information on how to use this feature, see [Maia for OQL](/refguide/maia-for-oql/). It is disabled by default.
+* **Enable Maia for Pages** – when enabled, you can use it to generate a new page or to explain and improve an existing one. For more information on how to use this feature, see [Maia for Pages](/refguide/maia-for-pages/). It is disabled by default.
+* **Enable Maia for Workflows** – when enabled, you can use it to generate workflows by adding and configuring activities. For more information on how to use this feature, see [Maia for Workflows](/refguide/maia-for-workflows/). It is disabled by default.
+* **Enable Translation Generator** – when enabled, you can use it to translate your model into different languages through the **Batch translate** option under the **Language** menu, or to translate [system texts](/refguide/system-texts/) for you. For more information, see [Translation Generator](/refguide/translation-generator/). It is disabled by default.
+
 ### In-Editor Recommender
 
 The **In-Editor Recommender** section contains the following settings:
 
-* **Enable for microflow, nanoflow, and rule editors** – this allows you to enable and disable [Logic Recommender](/refguide/logic-recommender/) in the microflow, nanoflow, and rule editors. 
-* **Enable for workflow editor** – this allows you to enable and disable [Workflow Recommender](/refguide/workflow-recommender/) in the workflow editor.
-* **Enable for page editor** - this allows you to enable and disable the [UI Recommendor](/refguide/ui-recommender/). This feature is enabled by default. 
+* **Enable for microflow, nanoflow, and rule editors** – this allows you to enable and disable [Logic Recommender](/refguide/logic-recommender/) in the microflow, nanoflow, and rule editors. It is enabled by default. 
+* **Enable for workflow editor** – this allows you to enable and disable [Workflow Recommender](/refguide/workflow-recommender/) in the workflow editor. It is enabled by default.
+* **Enable for page editor** - this allows you to enable and disable the [UI Recommendor](/refguide/ui-recommender/). It is enabled by default.
 
 ### Best Practice Recommender
 
 The **Best Practice Recommender** section contains the following settings:
 
-* **Show recommendation in editors** – when enabled, [Best Practice Recommender](/refguide/best-practice-recommender/) highlights elements that contain anti-patterns in visual editors.
+* **Show recommendation in editors** – when enabled, [Best Practice Recommender](/refguide/best-practice-recommender/) highlights elements that contain anti-patterns in visual editors. It is enabled by default.
 
-* **Automatically run an inspection after opening an app** – when enabled, [Best Practice Recommender](/refguide/best-practice-recommender/) automatically runs an inspection when an app is opened. If the app contains errors, the inspection will not run.
+* **Automatically run an inspection after opening an app** – when enabled, [Best Practice Recommender](/refguide/best-practice-recommender/) automatically runs an inspection when an app is opened. If the app contains errors, the inspection will not run. It is enabled by default.
 
 ## Model Tab
 
@@ -149,6 +161,10 @@ This is the pattern from which the arguments are derived that are passed to the 
 * `{0}` – this is replaced with the name of the original file before the arguments are passed to the file comparison program
 * `{1}` – this is replaced with the name of the changed file before the arguments are passed to the file comparison program
 
+#### History {#history-pane}
+
+Select this option to use the blocking History dialog instead of the non-blocking, searchable History pane.
+
 #### Solution Warning
 
 Select **Show warning on updating marketplace modules** to display a warning message when updating a Marketplace module. 
@@ -161,7 +177,7 @@ This setting allows users to specify a path for Git installation in their system
 
 #### Enable Private Version Control with Git {#enable-with-Git}
 
-Select this option when you want to work on an app that is not stored in [Mendix Team Server](/developerportal/general/team-server/), but in a private Git server, which you have access to. This allows you to specify the location of the app on the Git server when opening, downloading, or uploading the app. With this setting you also need to specify [name and email](#name) that will be used to identify your commits with Git.
+Select this option when you want to work on an app that is not stored in [Mendix Team Server](/developerportal/repository/team-server/), but in a private Git server, which you have access to. This allows you to specify the location of the app on the Git server when opening, downloading, or uploading the app. With this setting you also need to specify [name and email](#name) that will be used to identify your commits with Git.
 
 #### Name and Email {#name}
 
@@ -217,7 +233,7 @@ This option is available when the [Enable automatic repository optimization](#op
 
 ## Work Environment Tab
 
-### Studio Pro Theme {#studio-pro-theme}
+### Theme {#studio-pro-theme}
 
 This option allows user to choose between Studio Pro themes: **Auto (System theme)**, **Light**, or **Dark**. The default is **Auto (System theme)**, which detects the theme set in the operating system and uses an appropriate theme for Studio Pro (**Light** or **Dark**). Changing this option requires a restart of Studio Pro to take effect.
 
@@ -227,9 +243,7 @@ This option sets the default page editor mode that your page opens in: **Structu
 
 ### Language {#language}
 
-This feature is currently in beta.
-
-This option allows you to change the user interface language you work in while using Studio Pro. At this time, English, Japanese, Chinese, Korean, and Brazilian Portuguese are supported. You must restart Studio Pro in order to use this feature.
+This option allows you to change the user interface language you work in while using Studio Pro. At this time, English, Japanese, Chinese, Korean, and Brazilian Portuguese (Beta) are supported. You must restart Studio Pro in order to use this feature.
 
 ### Editor Tabs Closing Policy {#closing-policy}
 
@@ -239,9 +253,13 @@ It is recommended to limit the number of open tabs (open documents) to improve t
 The closing policy is not applied to tabs with unsaved changes.
 {{% /alert %}}
 
-### Navigation
+### Navigation {#navigation}
 
 This setting allows you to move forward and backward through your editing history to show the documents you have recently worked on. This feature is enabled by default. 
+
+### Dialogs {#dialogs}
+
+When a pop-up dialog is resized, Studio Pro will remember the new size and use it when the same dialog is opened again. This option allows you to disable this behavior and always show the dialogs at their default size.
 
 ## Advanced Tab
 
@@ -271,11 +289,23 @@ When the **Show feedback survey periodically** setting is enabled, Studio Pro wi
 
 When the **Do not show antivirus exclusion notifications** setting is enabled, Studio Pro will not display notifications related to antivirus exclusions. For more information, see [Antivirus Exclusion](/refguide/antivirus-exclusion/).
 
+### Extension Development 
+
+When **Extension Development** mode is enabled, you can start Studio Pro without using the extensibility feature flag, which allows you to develop extensions for Studio Pro. You must restart Studio Pro to use this feature.
+
 ## New Features Tab {#new-features}
 
 ### App Explorer
 
 Select this option to use the modernized version of the App Explorer. You must restart Studio Pro to use this feature.
+
+### History Pane {#history-pane}
+
+Select this option to use the non-blocking, searchable History pane instead of the blocking History window. This feature is currently in beta.
+
+### Runtime Console
+
+Select this option to use the modernized (web) Runtime console. You must restart Studio Pro to use this feature. 
 
 ### Errors Pane
 
@@ -289,28 +319,6 @@ This setting is enabled by default. The editor allows the user to write rich tex
 
 You can publish data as a GraphQL service. When you enable this feature, you can indicate that a published OData service [also supports GraphQL](/refguide/published-odata-services/#supports-graphql).
 
-### Maia
-
-#### Enable Maia for Domain Model
-
-Enable this option to help you generate entities and associations for your domain models. For more information on how to use this feature, see [Maia for Domain Model](/refguide/maia-for-domain-model/).
-
-#### Enable Maia for Pages
-
-Enable this option to help you generate pages by adding and configuring widgets based on text input and an optional image. For more information on how to use this feature, see [Maia for Pages](/refguide/maia-for-pages/).
-
-#### Enable Maia for Workflows
-
-Enable this option to help you generate workflows by adding and configuring activities. For more information on how to use this feature, see [Maia for Workflows](/refguide/maia-for-workflows/).
-
-#### Enable Maia for OQL
-
-Enable this option to help you generate and manage OQL (Object Query Language) queries through an intuitive interface. For more information on how to use this feature, see [Maia for OQL](/refguide/maia-for-oql/).
-
-#### Enable Translation Generator
-
-Enable this option to help you translate your model to different languages through **Batch translate** under the **Language** menu. For more information, see [Translation Generator](/refguide/translation-generator/).
-
 ### Mapping Editor
 
 This setting allows you to set the beta version as the default editor.
@@ -321,7 +329,7 @@ This setting, currently in beta, allows entities to be used in offline navigatio
 
 ### System Texts Editor
 
-The web version of the system texts editor is currently an experimental feature. Enable this option to use the web version of the editor. 
+This option allows you to use the web version of the system texts editor. It is enabled by default.
 
 If Translation Generator is also enabled, you can use it in this editor as well. For more information, see the [Generating Translation for System Texts](/refguide/translation-generator/#translate-system-text) section in *Translation Generator*.
 

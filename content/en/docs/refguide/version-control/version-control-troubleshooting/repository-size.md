@@ -30,12 +30,11 @@ Other places where you might encounter performance issues or timeouts are the fo
 
 * Retrieving a list of branches
 * Cloning on the command line or in a CI/CD pipeline
-* [Team Server](/developerportal/general/team-server/) page in **Apps** in the Mendix Portal, if you are using Team Server as your Git server
+* [Team Server](/developerportal/repository/team-server/) page in **Apps** in the Mendix Portal, if you are using Team Server as your Git server
 
 ## Preventing and Mitigating a Large Repository Size
 
 ### MPR Storage Format {#mpr-format}
-
 
 In Studio Pro 11, apps are automatically converted to the MPRv2 storage format. For more information of the effects of the MPRv1 storage format, please see the [MPR Storage Format](/refguide10/troubleshoot-repository-size/#mpr-format) section in *Troubleshooting Repository Size* in *Studio Pro 10 Guide*.
 
